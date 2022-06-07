@@ -28,13 +28,13 @@ v = x.shape[0]//6
 te = x.shape[0]//6
 
 x_train = np.expand_dims( x[ rnd_idxs[:tr] ,:], axis=2 )
-y_train = np.expand_dims( y[ rnd_idxs[:tr] ,:,:], axis=3 )
+y_train = np.expand_dims( y[ rnd_idxs[:tr] ,:], axis=2 )
 
 x_valid = np.expand_dims( x[ rnd_idxs[tr:tr+v] ,:], axis=2 )
-y_valid = np.expand_dims( y[ rnd_idxs[tr:tr+v] ,:,:], axis=3 )
+y_valid = np.expand_dims( y[ rnd_idxs[tr:tr+v] ,:], axis=2 )
 
 x_test = np.expand_dims( x[ rnd_idxs[tr+v:tr+v+te] ,:], axis=2 )
-y_test = np.expand_dims( y[ rnd_idxs[tr+v:tr+v+te] ,:,:], axis=3 )
+y_test = np.expand_dims( y[ rnd_idxs[tr+v:tr+v+te] ,:], axis=2 )
 
 
 # load model
@@ -51,19 +51,19 @@ for session in range(10):
 
     # y_pred = model.predict( x_test[tmp_rnd_idx:tmp_rnd_idx+1,:,:] )
     # y_true = y_test[tmp_rnd_idx:tmp_rnd_idx+1,:,:,:]
-    y_pred = model.predict( x_test[tmp_rnd_idx:tmp_rnd_idx+1,:,:] )
-    y_true = y_test[tmp_rnd_idx:tmp_rnd_idx+1,:,:,:]
+    y_pred = model.predict( x_test[tmp_rnd_idx:tmp_rnd_idx+1,:] )
+    y_true = y_test[tmp_rnd_idx:tmp_rnd_idx+1,:]
 
     fig, ax = plt.subplots(2,1)
     # fig.subplot(3,1,1)
     # plt.bar( np.arange(y_pred.shape[1]) , y_pred[0] )
-    ax[0].imshow( y_pred[0,:,:] , cmap='gray_r' )
-    ax[0].set_xticklabels([])
+    ax[0].bar( np.arange(len(y_pred[0,:])), y_pred[0,:] )
+    # ax[0].set_xticklabels([])
     ax[0].set_ylabel('string')
     ax[0].title.set_text('probabilities')
     # _,ax = plt.subplot(3,1,2)
     # plt.bar( np.arange(y_pred.shape[1]) , y_pred[0] )
-    ax[1].imshow( y_true[0,:,:,:], cmap='gray_r' )
+    ax[1].bar( np.arange(y_true[0,:,0].size), y_true[0,:,0] )
     ax[1].set_xticklabels([])
     ax[1].set_ylabel('string')
     ax[1].title.set_text('true')

@@ -22,7 +22,7 @@ with open('data/y.pickle', 'rb') as handle:
 
 idxs = np.random.permutation( x.shape[0] )
 x = x[idxs,:]
-y = y[idxs,:,:]
+y = y[idxs,:]
 
 # %%
 
@@ -36,13 +36,13 @@ v = x.shape[0]//6
 te = x.shape[0]//6
 
 x_train = np.expand_dims( x[ rnd_idxs[:tr] ,:], axis=2 )
-y_train = np.expand_dims( y[ rnd_idxs[:tr] ,:,:], axis=3 )
+y_train = np.expand_dims( y[ rnd_idxs[:tr] ,:], axis=2 )
 
 x_valid = np.expand_dims( x[ rnd_idxs[tr:tr+v] ,:], axis=2 )
-y_valid = np.expand_dims( y[ rnd_idxs[tr:tr+v] ,:,:], axis=3 )
+y_valid = np.expand_dims( y[ rnd_idxs[tr:tr+v] ,:], axis=2 )
 
 x_test = np.expand_dims( x[ rnd_idxs[tr+v:tr+v+te] ,:], axis=2 )
-y_test = np.expand_dims( y[ rnd_idxs[tr+v:tr+v+te] ,:,:], axis=3 )
+y_test = np.expand_dims( y[ rnd_idxs[tr+v:tr+v+te] ,:], axis=2 )
 
 # %% 
 
@@ -53,6 +53,7 @@ from tensorflow import keras
 
 max_norm_value = 2.0
 input_shape = [x_train[0].size,1]
+output_shape = [y_train[0].size,1]
 
 latent_size = 6*32
 
@@ -93,10 +94,14 @@ latent = keras.models.Sequential([
     keras.layers.Dense(latent_size, activation='relu'),
     keras.layers.Dropout(0.3),
     keras.layers.BatchNormalization(),
-    keras.layers.Dense(latent_size, activation='relu'),
-    keras.layers.Reshape( (1,6,latent_size//6) )
+    keras.layers.Dense(latent_size, activation='relu')
 ])
 
+decoder = keras.models.Sequential([
+    keras.layers.Dense(y_train[0].size, activation='sigmoid')
+])
+
+'''
 decoder = keras.models.Sequential([
     keras.layers.Conv2DTranspose(latent_size//6, kernel_size=3, strides=2, padding='valid',
                                  activation='selu', input_shape=[1,6,latent_size//6]),
@@ -105,6 +110,7 @@ decoder = keras.models.Sequential([
     keras.layers.Lambda(lambda x: x[:,:,:-1,:]),
     keras.layers.Reshape([6, 25])
 ])
+'''
 '''
 out_layer = keras.models.Sequential([
     keras.layers.Lambda(lambda x: x[:,:,:-1,:]),

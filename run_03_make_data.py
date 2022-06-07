@@ -15,19 +15,19 @@ import os
 import numpy as np
 import data_utils
 
-with open('data/dataset_audio_patterns_short.pickle', 'rb') as handle:
+with open('data/dataset_audio_patterns_midi.pickle', 'rb') as handle:
     patterns = pickle.load(handle)
 
 # %% XY matrices
 
 x = np.zeros( ( len( patterns ) , len( patterns[0]['audio'] ) ) ).astype(np.float32)
-y = np.zeros( ( len( patterns ) , patterns[0]['tab'].shape[0] , patterns[0]['tab'].shape[1] ) ).astype(np.bool)
+y = np.zeros( ( len( patterns ) , patterns[0]['midi'].size ) ).astype(np.bool)
 
 for i, p in enumerate( patterns ):
     if i%1000 == 0:
         print(str(i) + ' / ' + str(len(patterns)))
     x[i,:] = p['audio'].astype(np.float32)
-    y[i,:,:] = p['tab'].astype(np.bool)
+    y[i,:] = p['midi'].astype(np.bool)
 
 # %% 
 
