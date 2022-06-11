@@ -71,20 +71,20 @@ latent_size = 6*32
 
 # create the model
 encoder = keras.models.Sequential()
-encoder.add(keras.layers.Conv1D(64, kernel_size=16, activation='relu',input_shape=input_shape))
-# encoder.add(keras.layers.MaxPooling1D(2))
+encoder.add(keras.layers.Conv1D(32, kernel_size=8, strides=2, activation='relu',input_shape=input_shape))
+encoder.add(keras.layers.MaxPooling1D(2))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
-encoder.add(keras.layers.Conv1D(32, kernel_size=8, activation='relu'))
+encoder.add(keras.layers.Conv1D(64, kernel_size=4, strides=2, activation='relu'))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
-# encoder.add(keras.layers.MaxPooling1D(2))
-encoder.add(keras.layers.Conv1D(16, kernel_size=4, activation='relu'))
+encoder.add(keras.layers.MaxPooling1D(2))
+encoder.add(keras.layers.Conv1D(128, kernel_size=3, strides=2, activation='relu'))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
-# encoder.add(keras.layers.MaxPooling1D(2))
-encoder.add(keras.layers.Conv1D(8, kernel_size=3, activation='relu'))
-encoder.add(keras.layers.Conv1D(4, kernel_size=3, activation='relu'))
+encoder.add(keras.layers.MaxPooling1D(2))
+encoder.add(keras.layers.Conv1D(512, kernel_size=3, activation='relu'))
+# encoder.add(keras.layers.Conv1D(4, kernel_size=3, activation='relu'))
 encoder.add(keras.layers.Flatten())
 
 latent = keras.models.Sequential([
