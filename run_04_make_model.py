@@ -71,15 +71,15 @@ latent_size = 6*32
 
 # create the model
 encoder = keras.models.Sequential()
-encoder.add(keras.layers.Conv1D(32, kernel_size=8, strides=2, activation='relu',input_shape=input_shape))
+encoder.add(keras.layers.Conv1D(32, kernel_size=15, strides=5, activation='relu',input_shape=input_shape))
 encoder.add(keras.layers.MaxPooling1D(2))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
-encoder.add(keras.layers.Conv1D(64, kernel_size=4, strides=2, activation='relu'))
+encoder.add(keras.layers.Conv1D(64, kernel_size=11, strides=3, activation='relu'))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
 encoder.add(keras.layers.MaxPooling1D(2))
-encoder.add(keras.layers.Conv1D(128, kernel_size=3, strides=2, activation='relu'))
+encoder.add(keras.layers.Conv1D(128, kernel_size=7, strides=2, activation='relu'))
 encoder.add(keras.layers.Dropout(0.3))
 encoder.add(keras.layers.BatchNormalization())
 encoder.add(keras.layers.MaxPooling1D(2))
@@ -131,9 +131,9 @@ model.summary()
 def rounded_accuracy(y_true, y_pred):
     return keras.metrics.binary_accuracy(tf.round(y_true), tf.round(y_pred))
 
-model.compile(loss='mean_squared_error', optimizer='adam', metrics=['cosine_similarity'])
+# model.compile(loss='mean_squared_error', optimizer='adam', metrics=['cosine_similarity'])
 # model.compile(loss='binary_crossentropy', optimizer='adam', metrics=[rounded_accuracy])
-# model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['cosine_similarity'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['cosine_similarity'])
 
 # %%
 
