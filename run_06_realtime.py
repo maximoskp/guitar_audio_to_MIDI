@@ -16,7 +16,7 @@ import copy
 # load model
 model = keras.models.load_model( 'models/tab_full_CNN_out_current_best.hdf5' )
 
-device_1_index = 0
+device_1_index = 2
 device_2_index = -1
 
 p = pyaudio.PyAudio()
@@ -28,7 +28,7 @@ for i in range(p.get_device_count()):
     if 'Mic/Line In 3/4 (Studio 18' in d['name'] and d['hostApi'] == 0:
         device_2_index = d['index']
 
-WINDOW_SIZE = 2048
+WINDOW_SIZE = 4096
 CHANNELS = 1
 RATE = 16000
 
@@ -100,12 +100,14 @@ if device_2_index >= 0:
 threaded_input = Thread( target=user_input_function )
 threaded_input.start()
 
+plt.ion()
+
 # after starting, check when n empties (file ends) and stop
 while output1.is_active() and not user_terminated:
-    bb = copy.deepcopy( global_block[:1600] )
+    bb = copy.deepcopy( global_block[:3200] )
     if np.max( np.abs( bb ) ) > 0.05:
         bb = bb/np.max( np.abs( bb ) )
-    y_pred = model.predict( np.reshape( bb, (1,1600,1) ) )
+    y_pred = model.predict( np.reshape( bb, (1,3200,1) ) )
     plt.clf()
     plt.subplot(2,1,1)
     plt.plot( bb )
