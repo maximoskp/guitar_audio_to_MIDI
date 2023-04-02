@@ -28,7 +28,7 @@ for i in range(p.get_device_count()):
     if 'Mic/Line In 3/4 (Studio 18' in d['name'] and d['hostApi'] == 0:
         device_2_index = d['index']
 
-WINDOW_SIZE = 4096
+WINDOW_SIZE = 1024
 CHANNELS = 1
 RATE = 16000
 
@@ -76,7 +76,7 @@ p = pyaudio.PyAudio()
 output1 = p.open(format=pyaudio.paInt16,
                 channels=CHANNELS,
                 rate=RATE,
-                output=True,
+                output=False,
                 input=True,
                 input_device_index=device_1_index,
                 frames_per_buffer=WINDOW_SIZE,
@@ -104,10 +104,10 @@ plt.ion()
 
 # after starting, check when n empties (file ends) and stop
 while output1.is_active() and not user_terminated:
-    bb = copy.deepcopy( global_block[:3200] )
+    bb = copy.deepcopy( global_block[:1024] )
     if np.max( np.abs( bb ) ) > 0.05:
         bb = bb/np.max( np.abs( bb ) )
-    y_pred = model.predict( np.reshape( bb, (1,3200,1) ) )
+    y_pred = model.predict( np.reshape( bb, (1,1024,1) ) )
     plt.clf()
     plt.subplot(2,1,1)
     plt.plot( bb )
@@ -117,7 +117,7 @@ while output1.is_active() and not user_terminated:
     plt.subplot(2,1,2)
     plt.bar( np.arange(len(y_pred[0,:])), y_pred[0,:] )
     plt.ylim([0,1])
-    plt.title('output')
+    plt.title('output:' + str( 40 + np.where(y_pred[0,:] > 0.5)[0]  ) )
     # plt.imshow( spec_img[ WINDOW_SIZE//4: , : ] , aspect='auto' )
     plt.show()
     plt.pause(0.01)
