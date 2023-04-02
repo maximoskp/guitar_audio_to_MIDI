@@ -105,8 +105,8 @@ plt.ion()
 # after starting, check when n empties (file ends) and stop
 while output1.is_active() and not user_terminated:
     bb = copy.deepcopy( global_block[:1024] )
-    if np.max( np.abs( bb ) ) > 0.05:
-        bb = bb/np.max( np.abs( bb ) )
+    # if np.max( np.abs( bb ) ) > 0.05:
+    #     bb = bb/np.max( np.abs( bb ) )
     y_pred = model.predict( np.reshape( bb, (1,1024,1) ) )
     plt.clf()
     plt.subplot(2,1,1)
