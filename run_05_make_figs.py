@@ -18,9 +18,6 @@ with open('data/y.pickle', 'rb') as handle:
 
 # %%
 
-# for CREPE
-x = x[:,:1024]
-
 rnd_idxs = np.random.permutation( x.shape[0] )
 # make sure noise and empty are first
 rnd_idxs = np.insert(rnd_idxs, 0 , rnd_idxs.size-1)

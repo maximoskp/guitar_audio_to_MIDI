@@ -41,9 +41,9 @@ dataset = []
 # keep top_k
 top_k = 3000
 # sample duration in samples
-samples2keep = sr//5
+samples2keep = 1024
 samplesstep = samples2keep//2
-segments2keep = 2
+segments2keep = 5
 for i in range(top_k):
     print('pattern: ' + str(i) + '/' + str(top_k))
     p = sorted_patterns[i]['pattern']
@@ -70,6 +70,9 @@ for i in range(top_k):
                         tmp_s = tmp_s/np.max( np.abs( tmp_s ) )
                     sample = {'audio': tmp_s.astype(np.float32), 'tab': p.astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(p.astype(np.bool))}
                     dataset.append( sample )
+                    # add noisy version
+                    sample = {'audio': tmp_s.astype(np.float32) + np.random.rand(samples2keep).astype(np.float32)*0.5, 'tab': p.astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(p.astype(np.bool))}
+                    dataset.append( sample )
                     ii += samplesstep
                 p = np.roll( p , [0,1] )
                 highest_fret = np.where( np.sum( p, axis=0 ) > 0 )[0][-1]
@@ -88,15 +91,21 @@ for i in range(top_k):
                     tmp_s = tmp_s/np.max( np.abs( tmp_s ) )
                 sample = {'audio': tmp_s.astype(np.float32), 'tab': p.astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(p.astype(np.bool))}
                 dataset.append( sample )
+                # add noisy version
+                sample = {'audio': tmp_s.astype(np.float32) + np.random.rand(samples2keep).astype(np.float32)*0.5, 'tab': p.astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(p.astype(np.bool))}
+                dataset.append( sample )
                 ii += samplesstep
     else:
         print('empty tab')
     # add empty tab
     # print('empty-random')
-    sample = {'audio':  np.zeros(samples2keep).astype(np.float32), 'tab': np.zeros( (6,25) ).astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(np.zeros( (6,25) ).astype(np.bool))}
+    sample = {'audio': np.zeros(samples2keep).astype(np.float32), 'tab': np.zeros( (6,25) ).astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(np.zeros( (6,25) ).astype(np.bool))}
     dataset.append( sample )
     # add noises
-    sample = {'audio':  np.random.rand(samples2keep).astype(np.float32), 'tab': np.zeros( (6,25) ).astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(np.zeros( (6,25) ).astype(np.bool))}
+    sample = {'audio': np.random.rand(samples2keep).astype(np.float32), 'tab': np.zeros( (6,25) ).astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(np.zeros( (6,25) ).astype(np.bool))}
+    dataset.append( sample )
+    # add noisy version
+    sample = {'audio': np.random.rand(samples2keep).astype(np.float32)*0.5, 'tab': p.astype(np.bool), 'midi':data_utils.binarytab2binaryMIDI(p.astype(np.bool))}
     dataset.append( sample )
 # end for
 

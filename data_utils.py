@@ -13,6 +13,11 @@ from sklearn.utils import shuffle
 import librosa
 import copy
 
+# make a genarator for training the model
+# checkout audio FX
+# https://pypi.org/project/pysndfx/
+# especially how they can be applied to ndarray
+
 # binary midi ----------------------------------------------------------------
 def binarytab2binaryMIDI(t, lowest=40, highest=88):
     # initialize empty array with desired pitch coverage

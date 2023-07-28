@@ -20,9 +20,6 @@ with open('data/x.pickle', 'rb') as handle:
 with open('data/y.pickle', 'rb') as handle:
     y = pickle.load(handle)
 
-# make input 1024 samples as in CREPE
-x = x[:,:1024]
-
 idxs = np.random.permutation( x.shape[0] )
 x = x[idxs,:]
 y = y[idxs,:]
